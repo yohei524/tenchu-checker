@@ -60,19 +60,30 @@
 
     .date-row {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
+      justify-content: center;
+    }
+
+    .date-field {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .date-input {
-      flex: 1;
-      padding: 14px;
+      width: 70px;
+      padding: 12px 8px;
       border-radius: 8px;
       border: 2px solid #e0e0e0;
-      font-size: 18px;
+      font-size: 16px;
       text-align: center;
       transition: border-color 0.3s;
       -moz-appearance: textfield;
+    }
+
+    .date-input.year-input {
+      width: 80px;
     }
 
     .date-input:focus {
@@ -89,7 +100,7 @@
     .date-label {
       font-size: 14px;
       color: #666;
-      min-width: 20px;
+      flex-shrink: 0;
     }
 
     .btn {
@@ -220,12 +231,18 @@
       <div class="input-group">
         <label class="input-label">生年月日を入力</label>
         <div class="date-row">
-          <input class="date-input" id="year" type="tel" maxlength="4" placeholder="1985">
-          <span class="date-label">年</span>
-          <input class="date-input" id="month" type="tel" maxlength="2" placeholder="4">
-          <span class="date-label">月</span>
-          <input class="date-input" id="day" type="tel" maxlength="2" placeholder="21">
-          <span class="date-label">日</span>
+          <div class="date-field">
+            <input class="date-input year-input" id="year" type="tel" maxlength="4" placeholder="1985">
+            <span class="date-label">年</span>
+          </div>
+          <div class="date-field">
+            <input class="date-input" id="month" type="tel" maxlength="2" placeholder="4">
+            <span class="date-label">月</span>
+          </div>
+          <div class="date-field">
+            <input class="date-input" id="day" type="tel" maxlength="2" placeholder="21">
+            <span class="date-label">日</span>
+          </div>
         </div>
       </div>
 
