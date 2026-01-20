@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天中殺チェッカー | ひつじぃの命術</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .date-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .date-input {
+      flex: 1;
+      padding: 14px;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+      font-size: 18px;
+      text-align: center;
+      transition: border-color 0.3s;
+      -moz-appearance: textfield;
+    }
+
+    .date-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .date-input::-webkit-outer-spin-button,
+    .date-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .date-label {
+      font-size: 14px;
+      color: #666;
+      min-width: 20px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      color: #e74c3c;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 12px;
+      min-height: 20px;
+    }
+
+    .result-box {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px dashed #e0e0e0;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .result-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .tenchu-box {
+      margin-top: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .tenchu-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 8px;
+    }
+
+    .tenchu-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .tenchu-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #eee;
+    }
+
+    .footer a {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #00c73c;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .footer p {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #999;
+    }
+
+    .note {
+      font-size: 11px;
+      color: #999;
+      text-align: right;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>天中殺チェッカー</h1>
+        <p>生年月日から天中殺タイプを判定</p>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">生年月日を入力</label>
+        <div class="date-row">
+          <input class="date-input" id="year" type="tel" maxlength="4" placeholder="1985">
+          <span class="date-label">年</span>
+          <input class="date-input" id="month" type="tel" maxlength="2" placeholder="4">
+          <span class="date-label">月</span>
+          <input class="date-input" id="day" type="tel" maxlength="2" placeholder="21">
+          <span class="date-label">日</span>
+        </div>
+      </div>
+
+      <button class="btn" onclick="calculate()">判定する</button>
+
+      <div class="error" id="error"></div>
+
+      <div class="result-box" id="result">
+        <div class="result-item">
+          <span class="result-label">年干支</span>
+          <span class="result-value" id="res-year">--</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">月干支</span>
+          <span class="result-value" id="res-month">--</span>
+        </div>
+        <div class="result-item">
+          <span class="result-label">日干支</span>
+          <span class="result-value" id="res-day">--</span>
+        </div>
+
+        <div class="tenchu-box">
+          <div class="tenchu-label">あなたの天中殺</div>
+          <div class="tenchu-value" id="res-tenchu">--</div>
+          <div class="tenchu-desc" id="res-tenchu-desc"></div>
+        </div>
+
+        <p class="note">※節入り判定：JST正午基準</p>
+      </div>
+
+      <div class="footer">
+        <a href="https://lin.ee/6btlv1h" target="_blank">LINEでもっと詳しく見る</a>
+        <p>ひつじぃの命術</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 天干・地支データ
+    var STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+    var BRANCHES = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+
+    // 天中殺データ
+    var TENCHU_DATA = {
+      "戌亥": { name: "戌亥天中殺", desc: "精神性を高める使命" },
+      "申酉": { name: "申酉天中殺", desc: "信頼を受け継ぐ使命" },
+      "午未": { name: "午未天中殺", desc: "流れを断ち切る使命" },
+      "辰巳": { name: "辰巳天中殺", desc: "人と違う道を行く使命" },
+      "寅卯": { name: "寅卯天中殺", desc: "受け取り広げる使命" },
+      "子丑": { name: "子丑天中殺", desc: "何かを始める使命" }
+    };
+
+    // ユリウス日計算
+    function getJD(y, m, d) {
+      if (m <= 2) { y--; m += 12; }
+      var A = Math.floor(y / 100);
+      var B = 2 - A + Math.floor(A / 4);
+      return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
+    }
+
+    // 太陽黄経計算（簡易版）
+    function getSunLongitude(jd) {
+      var D = jd - 2451545.0;
+      var g = (357.529 + 0.98560028 * D) % 360;
+      var q = (280.459 + 0.98564736 * D) % 360;
+      var L = q + 1.915 * Math.sin(g * Math.PI / 180) + 0.020 * Math.sin(2 * g * Math.PI / 180);
+      return (L % 360 + 360) % 360;
+    }
+
+    // 天中殺タイプ判定
+    function getTenchu(dayNum) {
+      if (dayNum >= 1 && dayNum <= 10) return "戌亥";
+      if (dayNum >= 11 && dayNum <= 20) return "申酉";
+      if (dayNum >= 21 && dayNum <= 30) return "午未";
+      if (dayNum >= 31 && dayNum <= 40) return "辰巳";
+      if (dayNum >= 41 && dayNum <= 50) return "寅卯";
+      if (dayNum >= 51 && dayNum <= 60) return "子丑";
+      return null;
+    }
+
+    // メイン計算関数
+    function calculate() {
+      var yearStr = document.getElementById('year').value;
+      var monthStr = document.getElementById('month').value;
+      var dayStr = document.getElementById('day').value;
+      var errorEl = document.getElementById('error');
+      var resultEl = document.getElementById('result');
+
+      // リセット
+      errorEl.textContent = "";
+      resultEl.style.display = 'none';
+
+      // バリデーション
+      if (!yearStr || !monthStr || !dayStr) {
+        errorEl.textContent = "年月日をすべて入力してください";
+        return;
+      }
+
+      var year = parseInt(yearStr);
+      var month = parseInt(monthStr);
+      var day = parseInt(dayStr);
+
+      if (isNaN(year) || isNaN(month) || isNaN(day)) {
+        errorEl.textContent = "半角数字で入力してください";
+        return;
+      }
+
+      if (year < 1900 || year > 2100) {
+        errorEl.textContent = "年は1900〜2100の間で入力してください";
+        return;
+      }
+
+      if (month < 1 || month > 12) {
+        errorEl.textContent = "月は1〜12の間で入力してください";
+        return;
+      }
+
+      if (day < 1 || day > 31) {
+        errorEl.textContent = "日は1〜31の間で入力してください";
+        return;
+      }
+
+      try {
+        // 日干支計算
+        var jd = getJD(year, month, day);
+        var baseJD = 2451545;
+        var baseEto = 54;
+        var diff = jd - baseJD;
+        var dayIdx = ((baseEto + diff) % 60 + 60) % 60;
+        var dayText = STEMS[dayIdx % 10] + BRANCHES[dayIdx % 12];
+        var dayNum = dayIdx + 1;
+
+        // 太陽黄経
+        var sunLon = getSunLongitude(jd);
+
+        // 節気判定
+        var solarTerms = [
+          {d:315,b:2}, {d:345,b:3}, {d:15,b:4}, {d:45,b:5},
+          {d:75,b:6}, {d:105,b:7}, {d:135,b:8}, {d:165,b:9},
+          {d:195,b:10}, {d:225,b:11}, {d:255,b:0}, {d:285,b:1}
+        ];
+
+        var mBranchIdx = -1;
+        for (var i = 0; i < 12; i++) {
+          var cur = solarTerms[i];
+          var nxt = solarTerms[(i + 1) % 12];
+          var isMatch = false;
+
+          if (cur.d < nxt.d) {
+            if (sunLon >= cur.d && sunLon < nxt.d) isMatch = true;
+          } else {
+            if (sunLon >= cur.d || sunLon < nxt.d) isMatch = true;
+          }
+
+          if (isMatch) {
+            mBranchIdx = cur.b;
+            break;
+          }
+        }
+
+        // 年干支
+        var sYear = year;
+        if (month === 1) {
+          sYear = year - 1;
+        } else if (month === 2) {
+          if (sunLon >= 270 && sunLon < 315) {
+            sYear = year - 1;
+          }
+        }
+
+        var yOffset = sYear - 1984;
+        var yIdx = ((yOffset % 60) + 60) % 60;
+        var yText = STEMS[yIdx % 10] + BRANCHES[yIdx % 12];
+
+        // 月干支
+        var yStem = yIdx % 10;
+        var startMStem = (yStem % 5) * 2 + 2;
+        var mSteps = (mBranchIdx - 2 + 12) % 12;
+        var mStemIdx = (startMStem + mSteps) % 10;
+        var mText = STEMS[mStemIdx] + BRANCHES[mBranchIdx];
+
+        // 天中殺
+        var tenchuKey = getTenchu(dayNum);
+        var tenchuData = TENCHU_DATA[tenchuKey];
+
+        // 結果表示
+        document.getElementById('res-year').textContent = yText;
+        document.getElementById('res-month').textContent = mText;
+        document.getElementById('res-day').textContent = dayText;
+        document.getElementById('res-tenchu').textContent = tenchuData.name;
+        document.getElementById('res-tenchu-desc').textContent = tenchuData.desc;
+
+        resultEl.style.display = 'block';
+
+        // 結果までスクロール
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      } catch (e) {
+        console.error(e);
+        errorEl.textContent = "エラーが発生しました。入力を確認してください。";
+      }
+    }
+
+    // Enterキーで判定
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        calculate();
+      }
+    });
+  </script>
+</body>
+</html>
