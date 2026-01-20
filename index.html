@@ -355,10 +355,12 @@
         var jd = getJD(year, month, day);
         var baseJD = 2451545;
         var baseEto = 54;
-        var diff = jd - baseJD;
+        var diff = Math.round(jd - baseJD); // 小数点を丸める
         var dayIdx = ((baseEto + diff) % 60 + 60) % 60;
-        var dayText = STEMS[dayIdx % 10] + BRANCHES[dayIdx % 12];
         var dayNum = dayIdx + 1;
+
+        // dayNumが0になった場合は60に
+        if (dayNum === 0) dayNum = 60;
 
         // 太陽黄経
         var sunLon = getSunLongitude(jd);
