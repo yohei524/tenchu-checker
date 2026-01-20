@@ -251,26 +251,11 @@
       <div class="error" id="error"></div>
 
       <div class="result-box" id="result">
-        <div class="result-item">
-          <span class="result-label">年干支</span>
-          <span class="result-value" id="res-year">--</span>
-        </div>
-        <div class="result-item">
-          <span class="result-label">月干支</span>
-          <span class="result-value" id="res-month">--</span>
-        </div>
-        <div class="result-item">
-          <span class="result-label">日干支</span>
-          <span class="result-value" id="res-day">--</span>
-        </div>
-
         <div class="tenchu-box">
           <div class="tenchu-label">あなたの天中殺</div>
           <div class="tenchu-value" id="res-tenchu">--</div>
           <div class="tenchu-desc" id="res-tenchu-desc"></div>
         </div>
-
-        <p class="note">※節入り判定：JST正午基準</p>
       </div>
 
       <div class="footer">
@@ -428,10 +413,7 @@
         var tenchuKey = getTenchu(dayNum);
         var tenchuData = TENCHU_DATA[tenchuKey];
 
-        // 結果表示
-        document.getElementById('res-year').textContent = yText;
-        document.getElementById('res-month').textContent = mText;
-        document.getElementById('res-day').textContent = dayText;
+        // 結果表示（天中殺のみ）
         document.getElementById('res-tenchu').textContent = tenchuData.name;
         document.getElementById('res-tenchu-desc').textContent = tenchuData.desc;
 
