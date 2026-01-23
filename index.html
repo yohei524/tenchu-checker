@@ -218,6 +218,64 @@
       text-align: right;
       margin-top: 8px;
     }
+
+    .kanshi-section {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .nikkan-box {
+      margin-top: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .nikkan-label {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 8px;
+    }
+
+    .nikkan-value {
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .nikkan-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .footer a {
+      display: block;
+      padding: 12px 24px;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .line-btn {
+      background: #00c73c;
+    }
+
+    .note-btn {
+      background: #41c9b4;
+    }
+
+    .note-text {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -251,15 +309,42 @@
       <div class="error" id="error"></div>
 
       <div class="result-box" id="result">
+        <!-- 干支表示 -->
+        <div class="kanshi-section">
+          <div class="result-item">
+            <span class="result-label">年干支</span>
+            <span class="result-value" id="res-year">--</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">月干支</span>
+            <span class="result-value" id="res-month">--</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">日干支</span>
+            <span class="result-value" id="res-day">--</span>
+          </div>
+        </div>
+
+        <!-- 天中殺表示 -->
         <div class="tenchu-box">
           <div class="tenchu-label">あなたの天中殺</div>
           <div class="tenchu-value" id="res-tenchu">--</div>
           <div class="tenchu-desc" id="res-tenchu-desc"></div>
         </div>
+
+        <!-- 日干タイプ表示 -->
+        <div class="nikkan-box">
+          <div class="nikkan-label">あなたの日干タイプ</div>
+          <div class="nikkan-value" id="res-nikkan">--</div>
+          <div class="nikkan-desc" id="res-nikkan-desc"></div>
+        </div>
+
+        <p class="note">※節入り判定：JST正午基準</p>
       </div>
 
       <div class="footer">
-        <a href="https://lin.ee/6btlv1h" target="_blank">LINEでもっと詳しく見る</a>
+        <a href="https://lin.ee/6btlv1h" target="_blank" class="line-btn">LINEでもっと詳しく見る</a>
+        <p class="note-text">※ noteで天中殺・日干別の詳しい記事を準備中</p>
         <p>ひつじぃの命術</p>
       </div>
     </div>
@@ -278,6 +363,20 @@
       "辰巳": { name: "辰巳天中殺", desc: "人と違う道を行く使命" },
       "寅卯": { name: "寅卯天中殺", desc: "受け取り広げる使命" },
       "子丑": { name: "子丑天中殺", desc: "何かを始める使命" }
+    };
+
+    // 日干データ
+    var NIKKAN_DATA = {
+      "甲": { name: "甲（きのえ）", desc: "大木のように真っ直ぐ。リーダー気質" },
+      "乙": { name: "乙（きのと）", desc: "草花のようにしなやか。協調性が高い" },
+      "丙": { name: "丙（ひのえ）", desc: "太陽のように明るい。情熱的" },
+      "丁": { name: "丁（ひのと）", desc: "灯火のように繊細。直感が鋭い" },
+      "戊": { name: "戊（つちのえ）", desc: "山のようにどっしり。安定感がある" },
+      "己": { name: "己（つちのと）", desc: "田畑のように包容力がある。世話好き" },
+      "庚": { name: "庚（かのえ）", desc: "刀のように鋭い。決断力がある" },
+      "辛": { name: "辛（かのと）", desc: "宝石のように繊細。美意識が高い" },
+      "壬": { name: "壬（みずのえ）", desc: "大河のようにスケールが大きい。自由人" },
+      "癸": { name: "癸（みずのと）", desc: "雨のように静か。知性派" }
     };
 
     // ユリウス日計算
@@ -411,13 +510,25 @@
         var mStemIdx = (startMStem + mSteps) % 10;
         var mText = STEMS[mStemIdx] + BRANCHES[mBranchIdx];
 
+        // 日干支
+        var dayText = STEMS[dayIdx % 10] + BRANCHES[dayIdx % 12];
+        var dayStem = STEMS[dayIdx % 10];
+
         // 天中殺
         var tenchuKey = getTenchu(dayNum);
         var tenchuData = TENCHU_DATA[tenchuKey];
 
-        // 結果表示（天中殺のみ）
+        // 日干データ
+        var nikkanData = NIKKAN_DATA[dayStem];
+
+        // 結果表示
+        document.getElementById('res-year').textContent = yText;
+        document.getElementById('res-month').textContent = mText;
+        document.getElementById('res-day').textContent = dayText;
         document.getElementById('res-tenchu').textContent = tenchuData.name;
         document.getElementById('res-tenchu-desc').textContent = tenchuData.desc;
+        document.getElementById('res-nikkan').textContent = nikkanData.name;
+        document.getElementById('res-nikkan-desc').textContent = nikkanData.desc;
 
         resultEl.style.display = 'block';
 
