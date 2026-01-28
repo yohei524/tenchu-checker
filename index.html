@@ -268,7 +268,8 @@
     }
 
     .note-btn {
-      background: #41c9b4;
+      background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
+      margin-bottom: 12px;
     }
 
     .note-text {
@@ -343,8 +344,8 @@
       </div>
 
       <div class="footer">
+        <a href="" target="_blank" class="note-btn" id="note-link" style="display:none;">📖 あんたの天中殺タイプの2026年完全ガイド</a>
         <a href="https://lin.ee/6btlv1h" target="_blank" class="line-btn">LINEでもっと詳しく見る</a>
-        <p class="note-text">※ noteで天中殺・日干別の詳しい記事を準備中</p>
         <p>ひつじぃの命術</p>
       </div>
     </div>
@@ -355,14 +356,14 @@
     var STEMS = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
     var BRANCHES = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
-    // 天中殺データ
+    // 天中殺データ（noteURL: 公開後にURLを差し替え）
     var TENCHU_DATA = {
-      "戌亥": { name: "戌亥天中殺", desc: "精神性を高める使命" },
-      "申酉": { name: "申酉天中殺", desc: "信頼を受け継ぐ使命" },
-      "午未": { name: "午未天中殺", desc: "流れを断ち切る使命" },
-      "辰巳": { name: "辰巳天中殺", desc: "人と違う道を行く使命" },
-      "寅卯": { name: "寅卯天中殺", desc: "受け取り広げる使命" },
-      "子丑": { name: "子丑天中殺", desc: "何かを始める使命" }
+      "戌亥": { name: "戌亥天中殺", desc: "精神性を高める使命", noteUrl: "https://note.com/hitsujii/n/inuigaiten" },
+      "申酉": { name: "申酉天中殺", desc: "信頼を受け継ぐ使命", noteUrl: "https://note.com/hitsujii/n/sarutoriten" },
+      "午未": { name: "午未天中殺", desc: "流れを断ち切る使命", noteUrl: "https://note.com/hitsujii/n/umahitsujiten" },
+      "辰巳": { name: "辰巳天中殺", desc: "人と違う道を行く使命", noteUrl: "https://note.com/hitsujii/n/tatsumiten" },
+      "寅卯": { name: "寅卯天中殺", desc: "受け取り広げる使命", noteUrl: "https://note.com/hitsujii/n/torautenten" },
+      "子丑": { name: "子丑天中殺", desc: "何かを始める使命", noteUrl: "https://note.com/hitsujii/n/neushiten" }
     };
 
     // 日干データ
@@ -529,6 +530,13 @@
         document.getElementById('res-tenchu-desc').textContent = tenchuData.desc;
         document.getElementById('res-nikkan').textContent = nikkanData.name;
         document.getElementById('res-nikkan-desc').textContent = nikkanData.desc;
+
+        // noteリンクを表示
+        var noteLink = document.getElementById('note-link');
+        if (tenchuData.noteUrl) {
+          noteLink.href = tenchuData.noteUrl;
+          noteLink.style.display = 'block';
+        }
 
         resultEl.style.display = 'block';
 
